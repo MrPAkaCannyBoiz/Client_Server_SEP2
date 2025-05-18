@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" stylesheets="@CSS/styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MainPageView">
+<children>
+          <Text fx:id="timeText" layoutX="438.0" layoutY="42.0" text="time" />
+          <Text fx:id="dateText" layoutX="438.0" layoutY="81.0" text="date" />
+
+         <Button fx:id="employeePanelButton" layoutX="336.0" layoutY="204.0" onAction="#onEmployeePanelButton" prefHeight="64.0" prefWidth="226.0" styleClass="welcome-text" text="Employee Page" />
+
+         <Button fx:id="customerPanelButton" layoutX="299.0" layoutY="310.0" onAction="#onCustomerPanelButton" prefHeight="64.0" prefWidth="302.0" styleClass="welcome-text" text="Existing Customer Page" />
+
+         <!-- Info Text -->
+         <Text layoutX="249.0" layoutY="134.0" styleClass="welcome-text" text="VIACar Rental Online Booking" wrappingWidth="400.0" />
+      <Button layoutX="219.0" layoutY="421.0" onAction="#onNewCustomerPanelButton" prefHeight="64.0" prefWidth="461.0" styleClass="welcome-text" text="Sign up for new customer" />
+    </children>
+</AnchorPane>

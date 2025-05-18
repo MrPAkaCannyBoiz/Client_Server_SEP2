@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.CustomerPageView">
+
+    <children>
+
+        <!-- Filter ComboBoxes -->
+        <ComboBox fx:id="typeComboBox" layoutX="66.0" layoutY="85.0" prefWidth="120" promptText="Type">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Car" />
+                    <String fx:value="Motorcycle" />
+                    <String fx:value="Truck" />
+                    <String fx:value="SportCar" />
+                    <String fx:value="Van" />
+                    <String fx:value="UFO" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <ComboBox fx:id="colorComboBox" layoutX="206.0" layoutY="85.0" prefWidth="120" promptText="Color">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Red" />
+                    <String fx:value="Blue" />
+                    <String fx:value="Black" />
+                    <String fx:value="White" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <ComboBox fx:id="statusComboBox" layoutX="346.0" layoutY="85.0" prefWidth="120" promptText="Status">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Available" />
+                    <String fx:value="Rented" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <!-- Price Slider -->
+        <Label layoutX="487.0" layoutY="69.0" text="Max Price:" />
+        <Slider fx:id="priceSlider" blockIncrement="10" layoutX="561.0" layoutY="70.0" max="500" min="0" prefWidth="120" value="100" />
+        <Label fx:id="priceLabel" layoutX="686.0" layoutY="69.0" text="100" />
+
+        <!-- Table -->
+        <TableView fx:id="vehicleTable" layoutX="66.0" layoutY="135.0" prefHeight="298.0" prefWidth="761.0">
+            <columns>
+            <TableColumn fx:id="modelColumn" prefWidth="133.60000038146973" text="Brand" />
+                <TableColumn fx:id="colModel" prefWidth="140.0" text="Model" />
+                <TableColumn fx:id="colColor" prefWidth="128.800048828125" text="Color" />
+                <TableColumn fx:id="colType" prefWidth="113.60000610351562" text="Type" />
+                <TableColumn fx:id="colStatus" prefWidth="113.60003662109375" text="Status" />
+                <TableColumn fx:id="colPrice" prefWidth="134.39996337890625" text="Price/Day" />
+            </columns>
+        </TableView>
+        <Button fx:id="bookButton" layoutX="402.0" layoutY="452.0" onAction="#onBookButtonClicked" text="Book Vehicle" />
+        <Button fx:id="backButton" layoutX="164.0" layoutY="452.0" onAction="#handleBackClick" text="Back to Main" />
+      <Button fx:id="moreInfoButton" layoutX="647.0" layoutY="452.0" mnemonicParsing="false" onAction="#onMoreInfoClick" text="More info" />
+        <Button fx:id="filterButton" layoutX="564.0" layoutY="95.0" mnemonicParsing="false" onAction="#onClickFilter" prefHeight="25.0" prefWidth="67.0" text="Filter" />
+        <Button fx:id="resetButton" layoutX="647.0" layoutY="95.0" mnemonicParsing="false" onAction="#onResetClick" prefHeight="25.0" prefWidth="61.0" text="Clear" />
+      <Text layoutX="314.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Vehicle Booking Section">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Label fx:id="customerNameLabel" layoutX="98.0" layoutY="523.0" text="Customer detail" />
+      <Button layoutX="381.0" layoutY="497.0" mnemonicParsing="false" onMouseClicked="#onCancelBookingButtonClicked" text="Cancel Your Booking" />
+      <Button layoutX="398.0" layoutY="541.0" mnemonicParsing="false" onMouseClicked="#onReturnVehicleButtonClicked" text="Return Vehicle" />
+
+    </children>
+</AnchorPane>
