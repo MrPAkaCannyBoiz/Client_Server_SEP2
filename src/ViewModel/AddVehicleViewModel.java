@@ -22,11 +22,9 @@ public class AddVehicleViewModel
   private DoubleProperty pricePerDay, deposit, lateFeePerDay;
   private IntegerProperty noOfTyre, noOfSeat, topSpeed, loadCapacity, cargoVol,
       antiGravityLvl;
-
   // for checkBox
   private BooleanProperty hasSidecar, hasTurbo, hasTrailerAttached, hasSlidingDoor
       , hasCloakingDevice;
-
   //for ComboBox
   //for binding later
   private StringProperty selectedVehicleType;

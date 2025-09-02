@@ -42,11 +42,20 @@ public class NewEmployeeView
   {
     try
     {
-      if (passwordTextField.getText().equals(fixedPassword))
+      if (passwordTextField.getText().equals(fixedPassword)
+          && !nameTextField.getText().isEmpty() && !roleComboBox.getItems().isEmpty())
       {
         newEmployeeViewModel.addEmployee();
       }
-      else
+      else if (nameTextField.getText().isEmpty())
+      {
+        new Alert(Alert.AlertType.WARNING,"Empty name is not allowed").showAndWait();
+      }
+      else if (roleComboBox.getItems().isEmpty())
+      {
+        new Alert(Alert.AlertType.WARNING,"Empty role is not allowed").showAndWait();
+      }
+      else if (!passwordTextField.getText().equals(fixedPassword))
       {
         throw new IllegalArgumentException("Wrong password");
       }

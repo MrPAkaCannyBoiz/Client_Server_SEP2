@@ -65,27 +65,29 @@ public class BookingView
 
   public void onReturnVehicleButtonClicked()
   {
-    try
+    Booking selectedBooking = bookingTableView.getSelectionModel()
+        .getSelectedItem();
+    if (selectedBooking == null)
     {
-      Booking selectedBooking = bookingTableView.getSelectionModel()
-          .getSelectedItem();
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setHeaderText("No booking selected");
+      alert.setContentText("Please select a booking to cancel.");
+      alert.showAndWait();
+    }
+    else if (LocalDate.now().isAfter(selectedBooking.getStartDate())
+        || LocalDate.now().isEqual(selectedBooking.getStartDate()))
+    {
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setHeaderText("Cannot return");
+      alert.setContentText("Cannot return before start date");
+      alert.showAndWait();
+    }
+    else if (!LocalDate.now().isBefore(selectedBooking.getStartDate()))
+    {
       vehicleBookingViewModel.returnVehicleByEmployee(
           selectedBooking.getVehicle());
     }
-    catch (IllegalArgumentException e)
-    {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setHeaderText("Can't Return this vehicle");
-      alert.setContentText(e.getMessage());
-      alert.showAndWait();
-    }
-    catch (NullPointerException e)
-    {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setHeaderText("You have not select the booking");
-      alert.setContentText("Please select the booking to cancel");
-      alert.showAndWait();
-    }
+
   }
 
   public void onCancelBookingButtonClicked()
@@ -99,26 +101,20 @@ public class BookingView
       alert.setHeaderText("No booking selected");
       alert.setContentText("Please select a booking to cancel.");
       alert.showAndWait();
-      return;
     }
-    try
+    else if (!selectedBooking.getStartDate().isAfter(LocalDate.now()))
+    {
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setHeaderText("Cannot cancel");
+      alert.setContentText("Cannot cancel after start date");
+      alert.showAndWait();
+    }
+    else if (selectedBooking.getStartDate().isAfter(LocalDate.now()))
     {
       vehicleBookingViewModel.getModel()
           .cancelBookingWithByPassing(selectedBooking);
-    }
-    catch (IllegalArgumentException e)
-    {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setHeaderText("Error cancelling booking");
-      alert.setContentText(e.getMessage());
-      alert.showAndWait();
-    }
-    catch (NullPointerException e)
-    {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setHeaderText("Something's wrong");
-      alert.setContentText("Someone delete employee that you currently use or No booking selected");
-      alert.showAndWait();
+      new Alert(Alert.AlertType.INFORMATION,"done cancel booking")
+          .showAndWait();
     }
   }
 }

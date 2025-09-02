@@ -6,3 +6,5 @@ public interface SearchStrategy
 {
   ObservableList<Vehicle> search(ObservableList<Vehicle> vehicles);
 }
+
+

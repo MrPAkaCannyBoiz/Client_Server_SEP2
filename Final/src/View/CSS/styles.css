@@ -1,0 +1,63 @@
+.homeView_container {
+  -fx-background-color: #696969;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-font-family: "Segoe UI";
+}
+
+.homeView_logo_container {
+  -fx-background-color: #2f2f2f;
+  -fx-padding: 15;
+  -fx-spacing: 5;
+  -fx-alignment: center;
+  -fx-background-radius: 8;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 8, 0.2, 2, 2);
+}
+
+.homeView_logo_container Text {
+  -fx-fill: white;
+  -fx-font-family: "Segoe UI";
+  -fx-font-size: 16;
+  -fx-text-alignment: center;
+}
+
+  -fx-background-color: linear-gradient(to bottom, #3a3a3a, #1c1c1c);
+  -fx-text-fill: white;
+  -fx-font-family: "Segoe UI Semibold";
+  -fx-font-size: 16;
+  -fx-pref-width: 200;
+  -fx-pref-height: 45;
+  -fx-background-radius: 6;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0.2, 2, 2);
+  -fx-border-color: #5f9ea0;
+  -fx-border-width: 1;
+  -fx-border-radius: 6;
+}
+
+.action-button:hover {
+  -fx-background-color: linear-gradient(to bottom, #4f4f4f, #2a2a2a);
+  -fx-cursor: hand;
+}
+
+.welcome-text {
+  -fx-fill: #bbbbbb;
+  -fx-font-family: "Segoe UI Light";
+  -fx-font-size: 24;
+  -fx-text-alignment: center;
+  -fx-padding: 10 0 0 0;
+}
+
+.description-text {
+  -fx-fill: #888888;
+  -fx-font-family: "Segoe UI";
+  -fx-font-size: 16;
+  -fx-text-alignment: center;
+  -fx-line-spacing: 6;
+  -fx-wrap-text: true;
+}
+
+.logo-image {
+  -fx-fit-width: 100;
+  -fx-fit-height: 100;
+  -fx-preserve-ratio: true;
+}

@@ -19,6 +19,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     public void addEmployee(Employee employee) {
         String sql = "INSERT INTO employee (employeeid, name, role) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            System.out.println("[DAO] Inserting employee with ID: " + employee.getId());
+
             stmt.setInt(1, employee.getId());
             stmt.setString(2, employee.getName());
             stmt.setString(3, employee.getRole());
@@ -36,9 +38,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return new Employee(
-                        rs.getInt("employeeid"),
-                        rs.getString("name"),
-                        rs.getString("role")
+                        rs.getString("name"), rs.getString("role"), rs.getInt("employeeid")
                 );
             }
         } catch (SQLException e) {
@@ -55,9 +55,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 employees.add(new Employee(
-                        rs.getInt("employeeid"),
-                        rs.getString("name"),
-                        rs.getString("role")
+                        rs.getString("name"), rs.getString("role"), rs.getInt("employeeid")
                 ));
             }
         } catch (SQLException e) {

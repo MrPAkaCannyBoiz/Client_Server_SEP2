@@ -10,4 +10,6 @@ public interface BookingDAO {
     List<Booking> getAllBookings();
     void updateBooking(Booking booking);
     void deleteBooking(int id);
+    boolean hasBookingsForVehicle(String plateNo);
+
 }

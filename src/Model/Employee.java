@@ -11,16 +11,14 @@ public class Employee implements Serializable
     private static int idCounter;
     private static final long serialVersionUID = 4L;
 
-    public Employee(int id, String name, String role) {
-        this.id = id;
+    public Employee(String name, String role, int id) {
         this.name = name;
         this.role = role;
+        this.id = id;
+
     }
 
-    //auto increment version
-    public Employee(String name, String role)
-    {
-        this.id = idCounter++;
+    public Employee(String name, String role) {
         this.name = name;
         this.role = role;
     }
@@ -49,9 +47,24 @@ public class Employee implements Serializable
       }
     }
 
+    public void setId(int i) {
+        this.id=i;
+    }
+
+    public static void setIdCounter(int value) {
+        idCounter = value;
+    }
+
     public void setRole(String role)
     {
-        this.role = role;
+        if (!role.isEmpty())
+        {
+            this.role = role;
+        }
+        else
+        {
+            throw new IllegalArgumentException("Role can't be empty");
+        }
     }
 
     public String toString()
@@ -75,4 +88,6 @@ public class Employee implements Serializable
     {
         return Objects.hash(getId(), getName(), getRole());
     }
+
+
 }

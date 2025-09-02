@@ -19,7 +19,7 @@ public class Customer implements Serializable
   private String cpr;
   private String passNo;
   private int VIAId;
-  private static int VIAIdCounter = 0;
+  private static int VIAIdCounter;
   // when sending over objects Java will look for the UID, if there is none ja creates one but may cause errors
   private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,8 @@ public class Customer implements Serializable
 
   public Customer(String cpr, String passNo, String name, String phoneNo, String email, DriverLicense driverLicense, String nationality, String dob)
   {
-    this.VIAId = VIAIdCounter++;
+    //this.VIAId = VIAIdCounter++;
+    this.VIAId = -1;
     this.bookingList = new ArrayList<>();
     setName(name);
     setPhoneNo(phoneNo);
@@ -111,6 +112,10 @@ public class Customer implements Serializable
   public void setVIAId(int VIAId)
   {
     this.VIAId = VIAId;
+  }
+
+  public static void setVIAIdCounter(int value) {
+    VIAIdCounter = value;
   }
 
   public void setCpr(String cpr)
@@ -247,16 +252,21 @@ public class Customer implements Serializable
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
+    /* 1: trivial checks */
+    if (this == obj)                 return true;
+    if (obj  == null)               return false;
+    if (getClass() != obj.getClass()) return false;
+
+    /* 2: compare the ONE real primary key -> VIA-Id */
     Customer other = (Customer) obj;
-    return this.getVIAId() == other.getVIAId();
+    return this.VIAId == other.VIAId;
   }
 
   @Override
   public int hashCode() {
-    return Integer.hashCode(getVIAId());
+    return Integer.hashCode(VIAId);   // the very same primary key
   }
+
 
 
 //  @Override public boolean equals(Object object)

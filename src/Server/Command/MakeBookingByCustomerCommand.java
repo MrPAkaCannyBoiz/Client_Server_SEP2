@@ -23,7 +23,9 @@ public class MakeBookingByCustomerCommand implements RemoteCommand<Void>
 
   @Override
   public Void execute(RemoteModel model) {
+
     model.makeBookingByCustomer(startDate, endDate, customer, vehicle);
+    System.out.println("booked vehicle");
     return null;
   }
 }

@@ -26,7 +26,6 @@ public class EditingCustomerView {
   public DatePicker dobDatePicker;
   public ComboBox<String> nationalityComboBox;
   public Button setCustomerButton;
-  public TextField driverLicenseTextField;
   private ViewFactory viewFactory;
   private VehicleBookingViewModel vehicleBookingViewModel;
   private NewCustomerViewModel newCustomerViewModel;
@@ -66,70 +65,51 @@ public void initialize(){
     }
   }
   @FXML
-  public void onSetCustomerButtonClicked()
-  {
+  public void onSetCustomerButtonClicked() {
+
     Customer selected = listTable.getSelectionModel().getSelectedItem();
-      try
-      {
-        // Step 1: Collect new values from UI (DO NOT modify the customer yet)
-        String newName = nameTextField.getText();
-        String newPhone = phoneNoTextField.getText();
-        String newEmail = emailTextField.getText();
-        String newCpr = cprTextField.getText();
-        String newPassNo = passNoTextField.getText();
-        String newDob = dobDatePicker.getValue().toString();
-        String newNationality = nationalityComboBox.getValue();
-        String newLicenseNo = licenceNoTextField.getText();
-        boolean catA = categoryACheckBox.isSelected();
-        boolean catB = categoryBCheckBox.isSelected();
-        boolean catC = categoryCCheckBox.isSelected();
-        boolean catD = categoryDCheckBox.isSelected();
-        boolean catX = categoryXCheckBox.isSelected();
-        
+    if (selected == null) {
+      new Alert(Alert.AlertType.WARNING,"Please select a customer").showAndWait();
+      return;
+    }
 
-        // Create a temporary driver license for validation
-        DriverLicense tempLicense = new DriverLicense(
-            newLicenseNo, catA, catB, catC, catD, catX
-        );
+    try {
+      DriverLicense dl = new DriverLicense(
+              licenceNoTextField.getText(),
+              categoryACheckBox.isSelected(),
+              categoryBCheckBox.isSelected(),
+              categoryCCheckBox.isSelected(),
+              categoryDCheckBox.isSelected(),
+              categoryXCheckBox.isSelected());
 
-        // Create a temporary customer for uniqueness checks
-        Customer tempCustomer = new Customer
-            (newCpr,newPassNo,newName,newPhone,newEmail,tempLicense,newNationality,newDob);
+      Customer edited = new Customer(
+              selected.getVIAId(),
+              cprTextField.getText(),
+              passNoTextField.getText(),
+              nameTextField.getText(),
+              phoneNoTextField.getText(),
+              emailTextField.getText(),
+              dl,
+              nationalityComboBox.getValue(),
+              dobDatePicker.getValue().toString());
 
-        // Validate uniqueness using the temporary customer
-        newCustomerViewModel.checkIfCustomerInfoIsUnique(tempCustomer);
 
-        // Step 3: Only update the actual customer if validation succeeds
-        selected.setName(newName);
-        selected.setPhoneNo(newPhone);
-        selected.setEmail(newEmail);
-        selected.setCprAndPassNo(newCpr, newPassNo);
-        selected.setDob(newDob);
-        selected.setNationality(newNationality);
-        selected.setDriverLicense(tempLicense); // Use validated license
 
-        // Refresh UI and notify listeners
-        listTable.refresh();
-        vehicleBookingViewModel.firePropertyForCustomer();
 
-        Alert success = new Alert(Alert.AlertType.INFORMATION, "Customer information updated.");
-        success.showAndWait();
-        Stage stage = (Stage) setCustomerButton.getScene().getWindow();
-        stage.close();
-      }
-      catch (IllegalArgumentException e)
-      {
-        Alert error = new Alert(Alert.AlertType.ERROR, e.getMessage());
-        error.showAndWait();
-        listTable.getSelectionModel().clearSelection();
-      }
-      catch (NullPointerException e)
-      {
-        new Alert(Alert.AlertType.ERROR,"Please select customer")
-            .showAndWait();
-        listTable.getSelectionModel().clearSelection();
-      }
+      /* ---------- ONE round-trip does validation + update ------------ */
+      vehicleBookingViewModel
+              .getModel()
+              .updateCustomer(selected, edited);
+
+
+      new Alert(Alert.AlertType.INFORMATION,"Customer updated").showAndWait();
+      ((Stage)setCustomerButton.getScene().getWindow()).close();
+
+    } catch (IllegalArgumentException ex) {
+      new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+    }
   }
+
 
   public void setViewFactory(ViewFactory viewFactory)
   {

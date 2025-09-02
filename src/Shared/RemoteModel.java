@@ -8,27 +8,22 @@ import java.rmi.Remote;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface RemoteModel {
-
+public interface RemoteModel
+{
   // Vehicle related
   void addVehicle(Vehicle vehicle);
   void removeVehicle(Vehicle vehicle);
   List<Vehicle> getVehicles();
-
   // Customer related
   void addCustomer(Customer customer);
   void removeCustomer(Customer customer);
   void checkIfCustomerInfoIsUnique(Customer customer);
   List<Customer> getCustomers();
 // Employee related
-  void addEmployee(Employee employee);
-  void removeEmployee(Employee employee) throws IOException;
   void addEmployees(Employee employee) throws IOException;
   void removeEmployees(Employee employee) throws IOException;
   List<Employee> getEmployees();
-
   // Booking related
-
   void makeBookingByCustomer(LocalDate startDate, LocalDate endDate,
       Customer customerWhoBooked, Vehicle vehicleToBook);
   void makeBookingByEmployee(LocalDate startDate, LocalDate endDate,
@@ -38,7 +33,6 @@ public interface RemoteModel {
   void returnBookedVehicleAndPay(Vehicle vehicle, Customer customer);
   void returnBookedVehicleAndPayForEmployee(Vehicle vehicle);
   List<Booking> getAllBookings();
-
 
   void addPropertyChangeListener(String eventName, PropertyChangeListener listener);
   void removePropertyChangeListener(String eventName, PropertyChangeListener listener);
@@ -50,4 +44,6 @@ public interface RemoteModel {
   void rentTheVehicle(Vehicle vehicle, Customer customer);
   void returnTheVehicle(Vehicle vehicle, Customer customer);
   void firePropertyForAllCustomerBooking();
+  void updateCustomer(Customer oldCustomer, Customer editedCustomer);
+
 }

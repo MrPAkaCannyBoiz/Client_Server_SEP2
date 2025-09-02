@@ -20,8 +20,8 @@ public class VehicleDAOImpl implements VehicleDAO {
 
     @Override
     public void addVehicle(Vehicle vehicle) {
-        String sql = "INSERT INTO vehicle (model, color, enginetype, platenumber, priceperday, deposit, requiredlicensecategory, vehiclestatus, numberofseats, brand, type) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (platenumber) DO NOTHING";
+        String sql = "INSERT INTO vehicle (model, color, enginetype, platenumber, priceperday, deposit, requiredlicensecategory, vehiclestatus, numberofseats, brand, type, latefee) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, vehicle.getModel());
@@ -35,6 +35,8 @@ public class VehicleDAOImpl implements VehicleDAO {
             stmt.setInt(9, vehicle.getNoOfSeats());
             stmt.setString(10, vehicle.getBrand());
             stmt.setString(11, vehicle.getVehicleType());
+            stmt.setDouble(12, vehicle.getLateFee());
+
 
             stmt.executeUpdate();
 
@@ -47,10 +49,11 @@ public class VehicleDAOImpl implements VehicleDAO {
                     subStmt.executeUpdate();
                 }
             } else if (vehicle instanceof Van van) {
-                String subSql = "INSERT INTO van (platenumber, cargovolume) VALUES (?, ?)";
+                String subSql = "INSERT INTO van (platenumber, cargovolume, hasslidingdoor) VALUES (?, ?, ?)";
                 try (PreparedStatement subStmt = connection.prepareStatement(subSql)) {
                     subStmt.setString(1, van.getPlateNo());
                     subStmt.setDouble(2, van.getCargoVolume());
+                    subStmt.setBoolean(3, van.isHasSlidingDoor());
                     subStmt.executeUpdate();
                 }
             } else if (vehicle instanceof MotorCycle bike) {
@@ -69,10 +72,11 @@ public class VehicleDAOImpl implements VehicleDAO {
                     subStmt.executeUpdate();
                 }
             } else if (vehicle instanceof Ufo ufo) {
-                String subSql = "INSERT INTO ufo (platenumber, antigravitylevel) VALUES (?, ?)";
+                String subSql = "INSERT INTO ufo (platenumber, antigravitylevel, iscloakingdevice) VALUES (?, ?, ?)";
                 try (PreparedStatement subStmt = connection.prepareStatement(subSql)) {
                     subStmt.setString(1, ufo.getPlateNo());
                     subStmt.setInt(2, ufo.getAntiGravityLevel());
+                    subStmt.setBoolean(3, ufo.isCloakingDevice());
                     subStmt.executeUpdate();
                 }
             }
@@ -98,8 +102,8 @@ public class VehicleDAOImpl implements VehicleDAO {
                 double lateFee = rs.getDouble("latefee");
                 int seats = rs.getInt("numberofseats");
                 String brand = rs.getString("brand");
+                String status = rs.getString("vehiclestatus");
 
-                // 👇 Default tyres (lub można dodać do bazy)
                 int tyres = 4;
 
                 if (existsInTable("truck", plateNo)) {
@@ -107,49 +111,61 @@ public class VehicleDAOImpl implements VehicleDAO {
                     sub.setString(1, plateNo);
                     ResultSet subRs = sub.executeQuery();
                     if (subRs.next()) {
-                        return new Truck(brand, model, color, engine, plateNo, price, deposit, lateFee,
+                        Truck truck = new Truck(brand, model, color, engine, plateNo, price, deposit, lateFee,
                                 tyres, seats, subRs.getInt("loadcapacity"),
                                 subRs.getBoolean("trailerattached"));
+                        truck.setStatus(status);
+                        return truck;
                     }
                 } else if (existsInTable("van", plateNo)) {
                     PreparedStatement sub = connection.prepareStatement("SELECT * FROM van WHERE platenumber = ?");
                     sub.setString(1, plateNo);
                     ResultSet subRs = sub.executeQuery();
                     if (subRs.next()) {
-                        return new Van(brand, model, color, engine, plateNo, price, deposit, lateFee,
+                        Van van = new Van(brand, model, color, engine, plateNo, price, deposit, lateFee,
                                 tyres, seats, subRs.getInt("cargovolume"),
                                 subRs.getBoolean("hasslidingdoor"));
+                        van.setStatus(status);
+                        return van;
                     }
                 } else if (existsInTable("motorcycle", plateNo)) {
                     PreparedStatement sub = connection.prepareStatement("SELECT * FROM motorcycle WHERE platenumber = ?");
                     sub.setString(1, plateNo);
                     ResultSet subRs = sub.executeQuery();
                     if (subRs.next()) {
-                        return new MotorCycle(brand, model, color, engine, plateNo, price, deposit, lateFee,
-                                tyres, seats, subRs.getBoolean("hassidecar"));
+                        MotorCycle moto = new MotorCycle(brand, model, color, engine, plateNo, price, deposit, lateFee,
+                                tyres, seats, subRs.getBoolean("sidecar"));
+                        moto.setStatus(status);
+                        return moto;
                     }
                 } else if (existsInTable("sportscar", plateNo)) {
                     PreparedStatement sub = connection.prepareStatement("SELECT * FROM sportscar WHERE platenumber = ?");
                     sub.setString(1, plateNo);
                     ResultSet subRs = sub.executeQuery();
                     if (subRs.next()) {
-                        return new SportsCar(brand, model, color, engine, plateNo, price, deposit, lateFee,
+                        SportsCar sportsCar = new SportsCar(brand, model, color, engine, plateNo, price, deposit, lateFee,
                                 tyres, seats, subRs.getInt("topspeed"),
                                 subRs.getBoolean("turboengine"));
+                        sportsCar.setStatus(status);
+                        return sportsCar;
                     }
                 } else if (existsInTable("ufo", plateNo)) {
                     PreparedStatement sub = connection.prepareStatement("SELECT * FROM ufo WHERE platenumber = ?");
                     sub.setString(1, plateNo);
                     ResultSet subRs = sub.executeQuery();
                     if (subRs.next()) {
-                        return new Ufo(brand, model, color, engine, plateNo, price, deposit, lateFee,
+                        Ufo ufo = new Ufo(brand, model, color, engine, plateNo, price, deposit, lateFee,
                                 seats, subRs.getInt("antigravitylevel"),
                                 subRs.getBoolean("iscloakingdevice"));
+                        ufo.setStatus(status);
+                        return ufo;
                     }
                 }
 
                 // Default — zwykły Car
-                return new Car(brand, model, color, engine, plateNo, price, deposit, lateFee, tyres, seats);
+                Car car = new Car(brand, model, color, engine, plateNo, price, deposit, lateFee, tyres, seats);
+                car.setStatus(status);
+                return car;
             }
 
         } catch (SQLException e) {
@@ -158,6 +174,7 @@ public class VehicleDAOImpl implements VehicleDAO {
 
         return null;
     }
+
 
 
 
@@ -182,19 +199,21 @@ public class VehicleDAOImpl implements VehicleDAO {
 
     @Override
     public void updateVehicle(Vehicle vehicle) {
-        String sql = "UPDATE vehicle SET model=?, color=?, enginetype=?, priceperhour=?, deposit=?, requiredlicensecategory=?, vehiclestatus=?, numberofseats=?, brand=?, type=? WHERE platenumber=?";
+        String sql = "UPDATE vehicle SET model=?, color=?, enginetype=?, priceperday=?, deposit=?, requiredlicensecategory=?, vehiclestatus=?, numberofseats=?, brand=?, type=?, latefee=? WHERE platenumber=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, vehicle.getModel());
             stmt.setString(2, vehicle.getColor());
             stmt.setString(3, vehicle.getEngine());
             stmt.setDouble(4, vehicle.getPricePerDay());
             stmt.setDouble(5, vehicle.getDeposit());
-            stmt.setString(7, vehicle.getRequiredLicenseType());
+            stmt.setString(6, vehicle.getRequiredLicenseType());
             stmt.setString(7, vehicle.getStatus());
             stmt.setInt(8, vehicle.getNoOfSeats());
             stmt.setString(9, vehicle.getBrand());
             stmt.setString(10, vehicle.getVehicleType());
-            stmt.setString(11, vehicle.getPlateNo());
+            stmt.setDouble(11, vehicle.getLateFee());
+            stmt.setString(12, vehicle.getPlateNo());
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error updating vehicle", e);
@@ -203,13 +222,40 @@ public class VehicleDAOImpl implements VehicleDAO {
 
     @Override
     public void deleteVehicle(String plateNo) {
-        try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM vehicle WHERE platenumber = ?")) {
-            stmt.setString(1, plateNo);
-            stmt.executeUpdate();
+        try {
+            // Usuń z podtypów najpierw
+            try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM sportscar WHERE platenumber = ?")) {
+                stmt.setString(1, plateNo);
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM motorcycle WHERE platenumber = ?")) {
+                stmt.setString(1, plateNo);
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM truck WHERE platenumber = ?")) {
+                stmt.setString(1, plateNo);
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM van WHERE platenumber = ?")) {
+                stmt.setString(1, plateNo);
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM ufo WHERE platenumber = ?")) {
+                stmt.setString(1, plateNo);
+                stmt.executeUpdate();
+            }
+
+            // Dopiero na końcu usuń z głównej tabeli
+            try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM vehicle WHERE platenumber = ?")) {
+                stmt.setString(1, plateNo);
+                stmt.executeUpdate();
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException("Error deleting vehicle", e);
         }
     }
+
 
     private boolean existsInTable(String table, String plateNo) throws SQLException {
         String sql = "SELECT 1 FROM " + table + " WHERE platenumber = ?";

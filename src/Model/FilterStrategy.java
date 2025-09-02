@@ -23,9 +23,16 @@ public class FilterStrategy implements SearchStrategy
       ObservableList<Vehicle> vehicles)
   {
     return vehicles.filtered(vehicle ->
-        (selectedType == null || selectedType.isEmpty() || vehicle.getVehicleType().equals(selectedType)) &&
-            (selectedColour == null || selectedColour.isEmpty() || vehicle.getColor().equals(selectedColour)) &&
-            (selectedStatus == null || selectedStatus.isEmpty() || vehicle.getCurrentStatus().equals(selectedStatus)) &&
+        (selectedType == null || selectedType.isEmpty() ||
+            vehicle.getVehicleType().equals(selectedType)) &&
+            (selectedColour == null || selectedColour.isEmpty()
+                || vehicle.getColor().equals(selectedColour)) &&
+            (selectedStatus == null || selectedStatus.isEmpty()
+                || vehicle.getCurrentStatus().equals(selectedStatus)) &&
             vehicle.getPricePerDay() <= maxPrice);
   }
 }
+
+
+
+

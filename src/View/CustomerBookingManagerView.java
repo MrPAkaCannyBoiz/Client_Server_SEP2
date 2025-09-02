@@ -12,8 +12,6 @@ import java.time.LocalDate;
 
 public class CustomerBookingManagerView
 {
-  public Button cancelBookingButton;
-  public Button returnVehicleButton;
   @FXML private Label currentCustomerLabel;
   @FXML private TableView<Booking> bookingTableView;
   @FXML private TableColumn<Booking, Integer> bookingIDColumn;
@@ -40,14 +38,14 @@ public class CustomerBookingManagerView
     vehicleColumn.setCellValueFactory(new PropertyValueFactory<>("vehiclePlateNumber"));
     isActiveColumn.setCellValueFactory(new PropertyValueFactory<>("isActive"));
     finalPaymentColumn.setCellValueFactory(new PropertyValueFactory<>("finalPayment"));
-    bookingTableView.setItems(vehicleBookingViewModel.getBookingsOnCurrentCustomer());
+    bookingTableView.setItems(vehicleBookingViewModel.getBookings());
 
     currentCustomerLabel.textProperty().bind(vehicleBookingViewModel
         .currentCustomerProperty().map(customer ->
             //if-else statement on crack
             customer == null ?
                 "No customer selected" :
-                "Booking of Customer: " + customer.getName()));
+                "Your ID is: " + customer.getVIAId()));
   }
 
   public void setViewFactory(ViewFactory viewFactory)
@@ -55,52 +53,5 @@ public class CustomerBookingManagerView
     this.viewFactory = viewFactory;
   }
 
-  public void onCancelBookingButtonClicked()
-  {
-    try
-    {
-      Booking selectedBooking = bookingTableView.getSelectionModel()
-        .getSelectedItem();
-      vehicleBookingViewModel.cancelBookingForCurrentCustomer(selectedBooking);
-    }
-    catch (NullPointerException e)
-    {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setHeaderText("You have not select the booking");
-      alert.setContentText("Please select the booking to cancel");
-      alert.showAndWait();
-    }
-    catch (IllegalArgumentException e)
-    {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setHeaderText("Error cancelling booking");
-      alert.setContentText(e.getMessage());
-      alert.showAndWait();
-    }
-  }
-
-  public void onReturnBookingButtonClicked()
-  {
-    try
-    {
-      Vehicle vehicleGivenBySelectedBooking = bookingTableView.getSelectionModel()
-          .getSelectedItem().getVehicle();
-      vehicleBookingViewModel.returnBookedVehicleAndPay(vehicleGivenBySelectedBooking);
-    }
-    catch (NullPointerException e)
-    {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setHeaderText("You have not select the booking");
-      alert.setContentText("Please select the booking to cancel");
-      alert.showAndWait();
-    }
-    catch (IllegalArgumentException e)
-    {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setHeaderText("Error cancelling booking");
-      alert.setContentText(e.getMessage());
-      alert.showAndWait();
-    }
-  }
 
 }

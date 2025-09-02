@@ -1,6 +1,5 @@
 package Server;
 
-import Command.Command;
 import Server.Command.RemoteCommand;
 import Shared.RemoteModel;
 
@@ -8,13 +7,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ServerHandler implements Runnable {
+public class ServerHandler implements Runnable
+{
   private Socket socket;
   private RemoteModel model;
   private ObjectInputStream in;
   private ObjectOutputStream out;
 
-  public ServerHandler(Socket socket, RemoteModel model, ObjectInputStream in, ObjectOutputStream out) {
+  public ServerHandler(Socket socket, RemoteModel model, ObjectInputStream in, ObjectOutputStream out)
+  {
     this.socket = socket;
     this.model = model;
     this.in = in;
@@ -26,14 +27,55 @@ public class ServerHandler implements Runnable {
     try {
       while (true) {
         Object obj = in.readObject();
-        if (obj instanceof RemoteCommand<?> command) {
-          Object result = command.execute(model);
-          out.writeObject(result);
+        if (obj instanceof RemoteCommand<?>)
+        {
+          try
+          {
+            RemoteCommand<?> command = (RemoteCommand<?>) obj;
+            Object result = command.execute(model);
+            out.writeObject(result);
+          }
+          catch (Exception e)
+          {
+            System.err.println("[Server] command execution failed: " + e.getMessage());
+            e.printStackTrace();
+            out.writeObject(e);
+          }
+
           out.flush();
         }
+
       }
     } catch (Exception e) {
       System.err.println("[Server] Connection error: " + e.getMessage());
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

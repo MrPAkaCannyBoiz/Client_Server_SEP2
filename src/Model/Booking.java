@@ -9,42 +9,30 @@ public class Booking implements Serializable
 {
   private int bookingId;
   private int customerId;
-  private Integer employeeId;
+  private int employeeId;
   private LocalDate startDate;
   private LocalDate endDate;
   private Vehicle vehicle;
   private boolean isActive;
   private String vehiclePlateNumber;
-  private static int bookingIdCounter = 1;
+  private static int bookingIdCounter;
   private double finalPayment;
-  private static String nullString = "-";
-  // when sending over objects Java will look for the UID, if there is none ja creates one but may cause errors
+  // when sending over objects Java will look for the UID, if there is none java creates one but may cause errors
   private static final long serialVersionUID = 2L;
-  public Booking(int bookingId ,int customerId, int employeeId,
-      LocalDate startDate, LocalDate endDate, Vehicle vehicle)
-  {
-    //I could do it with try & Catch but this way is more understandable to me.
-    if (startDate.isBefore(LocalDate.now()))
-    {
-      throw new IllegalArgumentException("Start Date must be in today or the future.");
-    }
-    if (endDate.isBefore(startDate))
-    {
-      throw new IllegalArgumentException("End Date cannot be before start date.");
-    }
 
+  // Used by DAO to load bookings from database — skips validation
+  public Booking(int bookingId, int customerId, int employeeId,
+                 LocalDate startDate, LocalDate endDate,
+                 Vehicle vehicle, boolean isActive, double finalPayment)
+  {
     this.bookingId = bookingId;
     this.customerId = customerId;
     this.employeeId = employeeId;
     this.startDate = startDate;
     this.endDate = endDate;
     this.vehicle = vehicle;
-    this.isActive = true;
-    this.vehiclePlateNumber= vehicle.getPlateNo();
-    this.finalPayment = 0;
-
-    Thread t0 = new Thread(this::setToInActive);
-    t0.start();
+    this.isActive = isActive;
+    this.finalPayment = finalPayment;
   }
 
   //Customer book by their own version + auto increment version
@@ -63,7 +51,7 @@ public class Booking implements Serializable
 
     this.bookingId = bookingIdCounter++;
     this.customerId = customerId;
-    this.employeeId = null;
+    this.employeeId = -1;
     this.startDate = startDate;
     this.endDate = endDate;
     this.vehicle = vehicle;
@@ -102,9 +90,16 @@ public class Booking implements Serializable
     Thread t0 = new Thread(this::setToInActive);
     t0.start();
   }
-  public String getVehiclePlateNumber(){
-    return vehiclePlateNumber;
+
+  public void setBookingId(int i) {
+    this.bookingId = i;
   }
+
+  public String getVehiclePlateNumber() {
+    return vehicle != null ? vehicle.getPlateNo() : "-";
+  }
+
+
   public LocalDate getStartDate() {
     return startDate;
   }
@@ -141,11 +136,6 @@ public class Booking implements Serializable
   public double getFinalPayment()
   {
     return finalPayment;
-  }
-
-  public static String getNullString()
-  {
-    return nullString;
   }
 
   public boolean getIsActive(){
@@ -216,6 +206,10 @@ public class Booking implements Serializable
   public void setToInActiveInstantly()
   {
     isActive = false;
+  }
+
+  public static void setBookingCounter(int nextId) {
+    bookingIdCounter = nextId;
   }
 
   public void setFinalPayment(double finalPayment)

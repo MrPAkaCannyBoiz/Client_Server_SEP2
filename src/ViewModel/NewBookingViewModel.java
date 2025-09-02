@@ -50,11 +50,14 @@ public class NewBookingViewModel
     model.addPropertyChangeListener("SelectedVehicleEvent",this::updateSelectedVehicle);
   }
 
-  public void updateCustomer(PropertyChangeEvent event)
+  public void updateCustomer(PropertyChangeEvent evt)
   {
-    ArrayList<Customer> newCustomers = (ArrayList<Customer>) event.getNewValue();
-    Platform.runLater(()-> customers.setAll(newCustomers));
+    ArrayList<Customer> received = (ArrayList<Customer>) evt.getNewValue();
+    if (received != null) {
+      Platform.runLater(() -> customers.setAll(new ArrayList<>(received)));
+    }
   }
+
 
   public void updateCurrentCustomer(PropertyChangeEvent event)
   {
@@ -70,7 +73,8 @@ public class NewBookingViewModel
   public void makeBookingByEmployeeGivenSelectedVehicle(Customer selectedCustomer)
       throws IOException
   {
-    model.makeBookingByEmployee(startDate.get(),endDate.get(),selectedEmployee,selectedCustomer,chosenVehicle);
+    model.makeBookingByEmployee(startDate.get(),endDate.get(),
+        selectedEmployee,selectedCustomer,chosenVehicle);
   }
 
   // for Customer side
@@ -78,7 +82,8 @@ public class NewBookingViewModel
   {
     if (currentCustomer.get() != null && selectedVehicle.get() != null)
     {
-      model.makeBookingByCustomer(startDate.get(),endDate.get(),selectedCustomer,chosenVehicle);
+      model.makeBookingByCustomer(startDate.get(),endDate.get(),
+          selectedCustomer,chosenVehicle);
     }
   }
 
@@ -133,14 +138,14 @@ public class NewBookingViewModel
     model.firePropertyForCurrentCustomer(selectedCustomer);
   }
 
-  public void setSelectedEmployee(Employee selectedEmployee)
-  {
-    this.selectedEmployee = selectedEmployee;
-  }
-
   public void setChosenVehicle(Vehicle chosenVehicle)
   {
     this.chosenVehicle = chosenVehicle;
     model.firePropertyForSelectedVehicle(chosenVehicle);
+  }
+
+  public void setSelectedEmployee(Employee selectedEmployee)
+  {
+    this.selectedEmployee = selectedEmployee;
   }
 }

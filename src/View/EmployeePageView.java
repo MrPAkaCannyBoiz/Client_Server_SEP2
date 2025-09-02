@@ -2,10 +2,7 @@ package View;
 
 import Application.ViewFactory;
 import Application.ViewModelFactory;
-import Model.AvailableState;
-import Model.FilterStrategy;
-import Model.SearchStrategy;
-import Model.Vehicle;
+import Model.*;
 import ViewModel.NewBookingViewModel;
 import ViewModel.VehicleBookingViewModel;
 import javafx.collections.ObservableList;
@@ -37,7 +34,6 @@ public class EmployeePageView {
     @FXML private TableColumn<Vehicle, String> colStatus;
     @FXML private TableColumn<Vehicle, Integer> colPrice;
 
-    @FXML private Button reserveButton;
     @FXML private Button bookButton;
     @FXML private Button filterButton;
     @FXML private Button backButton;
@@ -187,7 +183,18 @@ private void onMoreInfoClick(){
       {
         Vehicle selectedVehicle = vehicleTable.getSelectionModel()
             .getSelectedItem();
-        vehicleBookingViewModel.returnVehicleByEmployee(selectedVehicle);
+          if (selectedVehicle == null)
+          {
+              Alert alert = new Alert(Alert.AlertType.WARNING);
+              alert.setHeaderText("Can't Return this vehicle");
+              alert.setContentText("please select vehicle first");
+              alert.showAndWait();
+          }
+        else
+        {
+            vehicleBookingViewModel.returnVehicleByEmployee(selectedVehicle);
+        }
+
       }
       catch (IllegalArgumentException e)
       {
@@ -214,25 +221,25 @@ private void onMoreInfoClick(){
             alert.setContentText("Please select vehicle to remove");
             alert.showAndWait();
         }
-        else
+        else if (selectedVehicle.getCurrentState() instanceof AvailableState)
         {
-          try
-          {
             vehicleBookingViewModel.removeVehicle(selectedVehicle);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setContentText("Vehicle plate no " + selectedVehicle.getPlateNo() + " is removed");
+            alert.setContentText("Vehicle plate no " +
+                selectedVehicle.getPlateNo() + " is removed");
             alert.showAndWait();
-          }
-          catch (IllegalArgumentException e)
-          {
-            new Alert(Alert.AlertType.WARNING,e.getMessage()).showAndWait();
-          }
+        }
+        else if (selectedVehicle.getCurrentState() instanceof RentedState)
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Cannot remove rented vehicle");
+            alert.showAndWait();
         }
     }
 
 
     public void onClickCustomerListButton() throws IOException
     {
-    viewFactory.getEditingCustomerView();
+        viewFactory.getEditingCustomerView();
     }
 }

@@ -34,7 +34,6 @@ public class CustomerPageView
     @FXML private TableColumn<Vehicle, String> colStatus;
     @FXML private TableColumn<Vehicle, Integer> colPrice;
 
-    @FXML private Button reserveButton;
     @FXML private Button bookButton;
     @FXML private Button filterButton;
     @FXML private Button backButton;
@@ -148,10 +147,8 @@ public class CustomerPageView
         // Apply filter strategy
         SearchStrategy strategy = new FilterStrategy(selectedType,
             selectedColor, selectedStatus, maxPrice);
-
         ObservableList<Vehicle> filteredVehicles = strategy.search(
             vehicleBookingViewModel.getVehicles());
-
         vehicleTable.setItems(filteredVehicles);
     }
 
@@ -160,26 +157,6 @@ public class CustomerPageView
         viewFactory.getCustomerBookingManagerView();
     }
 
-    public void onReturnVehicleButtonClicked()
-    {
-      try
-      {
-        Vehicle selectedVehicle = vehicleTable.getSelectionModel()
-            .getSelectedItem();
-        vehicleBookingViewModel.returnBookedVehicleAndPay(selectedVehicle);
-      }
-      catch (NullPointerException e)
-      {
-          Alert alert = new Alert(Alert.AlertType.WARNING);
-          alert.setHeaderText("You have not select the booking");
-          alert.setContentText("Please select the booking to return");
-          alert.showAndWait();
-      }
-      catch (IllegalArgumentException e)
-      {
-          new Alert(Alert.AlertType.WARNING,e.getMessage()).showAndWait();
-      }
-    }
 
     public void onResetClick()
     {

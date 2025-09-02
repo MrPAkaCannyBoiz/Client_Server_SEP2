@@ -27,12 +27,12 @@ public class NewCustomerViewModel
   public NewCustomerViewModel(RemoteModel model)
   {
     this.model = model;
-    DriverLicense emptyLicense =
-        new DriverLicense("EMPTY" ,false,false
-            ,false,false,false);
-    this.selectedCustomer =
-        new Customer(0, "1111111111","unknown","dupa",
-            "321321","dupa1",emptyLicense,"idk1","1000-12-11");
+//    DriverLicense emptyLicense =
+//        new DriverLicense("EMPTY" ,false,false
+//            ,false,false,false);
+//    this.selectedCustomer =
+//        new Customer(0, "1111111111","unknown","dupa",
+//            "321321","dupa1",emptyLicense,"idk1","1000-12-11");
     this.name = new SimpleStringProperty("");
     this.phoneNo = new SimpleStringProperty("");
     this.email = new SimpleStringProperty("");

@@ -9,9 +9,11 @@ public class AddEmployeeCommand implements RemoteCommand<Void>
 {
   private Employee employee;
 
-  public AddEmployeeCommand(Employee employee) {
+  public AddEmployeeCommand(Employee employee)
+  {
     this.employee = employee;
   }
+
   @Override public Void execute(RemoteModel model) throws IOException
   {
     model.addEmployees(employee);

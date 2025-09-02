@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Client Server SEP2.iml" filepath="$PROJECT_DIR$/Client Server SEP2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Final/Final.iml" filepath="$PROJECT_DIR$/Final/Final.iml" />
+      <module fileurl="file://$PROJECT_DIR$/True Final/True Final.iml" filepath="$PROJECT_DIR$/True Final/True Final.iml" />
     </modules>
   </component>
 </project>

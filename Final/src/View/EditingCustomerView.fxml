@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="858.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.EditingCustomerView">
+   <children>
+      <ListView fx:id="listTable" layoutX="32.0" layoutY="79.0" prefHeight="200.0" prefWidth="285.0" />
+      <Button fx:id="editSelectedCustomerButton" layoutX="105.0" layoutY="299.0" mnemonicParsing="false" onAction="#onEditSelectedCustomerButtonClicked" text="Edit selected  customer" />
+      <Text layoutX="366.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name " />
+      <TextField fx:id="nameTextField" layoutX="431.0" layoutY="61.0" />
+      <Text layoutX="355.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone No." />
+      <TextField fx:id="phoneNoTextField" layoutX="432.0" layoutY="100.0" />
+      <Text layoutX="366.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email" />
+      <TextField fx:id="emailTextField" layoutX="431.0" layoutY="139.0" />
+      <Text layoutX="351.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nationality" />
+      <Text layoutX="346.0" layoutY="242.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date of birth" />
+      <Text layoutX="361.0" layoutY="286.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CPR No." />
+      <TextField fx:id="cprTextField" layoutX="431.0" layoutY="268.0" />
+      <Text layoutX="346.0" layoutY="325.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Passport No." />
+      <TextField fx:id="passNoTextField" layoutX="432.0" layoutY="308.0" />
+      <Text layoutX="615.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Licence No." />
+      <TextField fx:id="licenceNoTextField" layoutX="687.0" layoutY="64.0" />
+      <CheckBox fx:id="categoryACheckBox" layoutX="704.0" layoutY="115.0" mnemonicParsing="false" text="Category A" />
+      <CheckBox fx:id="categoryBCheckBox" layoutX="704.0" layoutY="150.0" mnemonicParsing="false" text="Category B" />
+      <CheckBox fx:id="categoryCCheckBox" layoutX="704.0" layoutY="184.0" mnemonicParsing="false" text="Category C" />
+      <CheckBox fx:id="categoryDCheckBox" layoutX="703.0" layoutY="221.0" mnemonicParsing="false" text="Category D" />
+      <CheckBox fx:id="categoryXCheckBox" layoutX="704.0" layoutY="258.0" mnemonicParsing="false" text="Category X" />
+      <DatePicker fx:id="dobDatePicker" layoutX="431.0" layoutY="225.0" />
+      <ComboBox fx:id="nationalityComboBox" layoutX="431.0" layoutY="182.0" prefWidth="150.0" />
+      <Button fx:id="setCustomerButton" layoutX="676.0" layoutY="349.0" mnemonicParsing="false" onAction="#onSetCustomerButtonClicked" text="Confirm Changes " />
+   </children>
+</AnchorPane>

@@ -28,10 +28,10 @@ public class AddVehicleView
   @FXML private TextField cargoVolTextField;
   @FXML private TextField antiGravityTextField;
   @FXML private CheckBox hasSideCarCheckBox;
-  @FXML private CheckBox hasTurboCheckBox;
   @FXML private CheckBox hasSlidingDoorCheckBox;
   @FXML private CheckBox hasTrailerAttachedCheckBox;
   @FXML private CheckBox hasCloakingDeviceCheckBox;
+  @FXML private CheckBox hasTurboCheckBox;
   @FXML private Button addVehicleButton;
 
   public AddVehicleView(AddVehicleViewModel viewModel)

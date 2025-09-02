@@ -10,6 +10,12 @@ import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
 
+    private DriverLicenseDAOImpl driverLicenseDAO;
+
+    public CustomerDAOImpl() throws SQLException {
+        this.driverLicenseDAO = new DriverLicenseDAOImpl();
+    }
+
     @Override
     public void addCustomer(Customer customer) {
         String insertLicenseSQL = "INSERT INTO drivinglicense (drivinglicensenumber, categorya, categoryb, categoryc, categoryd, categoryx) " +
@@ -34,6 +40,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 
             // 2. Insert into customer
             try (PreparedStatement stmt = conn.prepareStatement(insertCustomerSQL)) {
+                System.out.println("[DAO] Inserting customer with ID: " + customer.getVIAId());
+
                 stmt.setInt(1, customer.getVIAId());
                 stmt.setString(2, customer.getName());
                 stmt.setString(3, customer.getPhoneNo());
@@ -122,27 +130,26 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public void updateCustomer(Customer customer) {
-        String sql = "UPDATE customer SET name = ?, phoneno = ?, email = ?, nationality = ?, dob = ?, driverlicense = ?, cpr = ?, passno = ? WHERE customerid = ?";
+        String sql = "UPDATE customer SET name = ?, phoneNo = ?, email = ?, nationality = ?, dob = ?, cpr = ?, passNo = ?, driverLicense = ? WHERE customerId = ?";
+        driverLicenseDAO.updateDriverLicense(customer.getDriverLicense());
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, customer.getName());
             stmt.setString(2, customer.getPhoneNo());
             stmt.setString(3, customer.getEmail());
             stmt.setString(4, customer.getNationality());
             stmt.setDate(5, Date.valueOf(customer.getDob()));
-            stmt.setString(6, customer.getDriverLicense().getLicenseNumber());
-            stmt.setString(7, customer.getCpr());
-            stmt.setString(8, customer.getPassNo());
-            stmt.setInt(9, customer.getVIAIdCounter());
-
+            stmt.setString(6, customer.getCpr());
+            stmt.setString(7, customer.getPassNo());
+            stmt.setString(8, customer.getDriverLicense().getLicenseNumber());
+            stmt.setInt(9, customer.getVIAId());
             stmt.executeUpdate();
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error updating customer", e);
         }
     }
+
 
     @Override
     public void deleteCustomer(int id) {

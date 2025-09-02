@@ -20,14 +20,23 @@ public class BookingDAOImpl implements BookingDAO {
 
     @Override
     public void addBooking(Booking booking) {
-        String sql = "INSERT INTO booking (bookingid, customerid, vehicleid, employeeid, startdate, enddate) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO booking (bookingid, customerid, employeeid, startdate, enddate, vehicleid, active, finalpayment)\n" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)\n";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            System.out.println("[DAO] Inserting booking with ID: " + booking.getBookingId());
+
             stmt.setInt(1, booking.getBookingId());
             stmt.setInt(2, booking.getCustomerId());
-            stmt.setString(3, booking.getVehicle().getPlateNo()); // plateNumber
-            stmt.setInt(4, booking.getEmployeeId());
-            stmt.setDate(5, Date.valueOf(booking.getStartDate()));
-            stmt.setDate(6, Date.valueOf(booking.getEndDate()));
+            if (booking.getEmployeeId() < 0) {
+                stmt.setNull(3, Types.INTEGER);
+            } else {
+                stmt.setInt(3, booking.getEmployeeId());
+            }
+            stmt.setDate(4, Date.valueOf(booking.getStartDate()));
+            stmt.setDate(5, Date.valueOf(booking.getEndDate()));
+            stmt.setString(6, booking.getVehicle().getPlateNo());
+            stmt.setBoolean(7, booking.isActive());
+            stmt.setDouble(8, booking.getFinalPayment());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error adding booking", e);
@@ -49,8 +58,11 @@ public class BookingDAOImpl implements BookingDAO {
                         rs.getInt("employeeid"),
                         rs.getDate("startdate").toLocalDate(),
                         rs.getDate("enddate").toLocalDate(),
-                        vehicle
+                        vehicle,
+                        rs.getBoolean("active"),
+                        rs.getDouble("finalpayment")
                 );
+
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving booking", e);
@@ -73,8 +85,11 @@ public class BookingDAOImpl implements BookingDAO {
                         rs.getInt("employeeid"),
                         rs.getDate("startdate").toLocalDate(),
                         rs.getDate("enddate").toLocalDate(),
-                        vehicle
+                        vehicle,
+                        rs.getBoolean("active"),
+                        rs.getDouble("finalpayment")
                 ));
+
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving bookings", e);
@@ -84,19 +99,43 @@ public class BookingDAOImpl implements BookingDAO {
 
     @Override
     public void updateBooking(Booking booking) {
-        String sql = "UPDATE booking SET customerid=?, vehicleid=?, employeeid=?, startdate=?, enddate=? WHERE bookingid=?";
+        String sql = "UPDATE booking SET customerid=?, vehicleid=?, employeeid=?, startdate=?, enddate=?, active=?, finalpayment=? WHERE bookingid=?";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, booking.getCustomerId());
-            stmt.setString(2, booking.getVehicle().getPlateNo()); // plateNumber
-            stmt.setInt(3, booking.getEmployeeId());
+            stmt.setString(2, booking.getVehicle().getPlateNo());
+            if (booking.getEmployeeId() > 0) {
+                stmt.setInt(3, booking.getEmployeeId());
+            } else {
+                stmt.setNull(3, Types.INTEGER);
+            }
             stmt.setDate(4, Date.valueOf(booking.getStartDate()));
             stmt.setDate(5, Date.valueOf(booking.getEndDate()));
-            stmt.setInt(6, booking.getBookingId());
+            stmt.setBoolean(6, booking.isActive());
+            stmt.setDouble(7, booking.getFinalPayment());
+            stmt.setInt(8, booking.getBookingId());
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error updating booking", e);
         }
     }
+
+    @Override
+    public boolean hasBookingsForVehicle(String plateNo) {
+        String sql = "SELECT COUNT(*) FROM booking WHERE vehicleid = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, plateNo);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking bookings for vehicle", e);
+        }
+        return false;
+    }
+
 
     @Override
     public void deleteBooking(int id) {
