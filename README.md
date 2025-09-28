@@ -5,7 +5,6 @@ This project is an simulation of online car rental system, where customer able t
 # Programming Langauge
 - Java 
 - PostgreSQL
-- CSS
   
 # Learning outcome
 - Understand SOILD Principles
