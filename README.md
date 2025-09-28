@@ -14,3 +14,4 @@ This project is an simulation of online car rental system, where customer able t
 - Network Protocol via Sockets
 - SCRUM framework
   
+[Analysis, Design and UML link](https://mega.nz/folder/yEdFyLzB#MvHlpxQHiLK-cQrpGuHSZg)
